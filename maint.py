@@ -22,18 +22,46 @@ walk_right =[
     pygame.image.load('srcs/PlayerRight/right3.png'),
     pygame.image.load('srcs/PlayerRight/right4.png')
 ]
-player_anim_count = 0
+
 bg_x = 0
+player_anim_count = 0
+player_speed = 5
+player_x = 150
+player_y = 250
+is_jump = False
+jump_count = 7
 
 bg_sound.play()
 
 running = True
 while running:
-
+    KeyPressed = pygame.key.get_pressed()
     screen.blit(bg,(bg_x, 0))
     screen.blit(bg, (bg_x + 800, 0))
 
-    screen.blit(walk_right[player_anim_count], (350, 250))
+    if KeyPressed[pygame.K_LEFT]:
+        screen.blit(walk_left[player_anim_count], (player_x, player_y))
+    else:
+        screen.blit(walk_right[player_anim_count], (player_x, player_y))
+
+    if KeyPressed[pygame.K_LEFT] and player_x > 50:
+        player_x -= player_speed
+    elif KeyPressed[pygame.K_RIGHT] and player_x < 750:
+        player_x += player_speed
+
+    if not is_jump:
+        if KeyPressed[pygame.K_UP]:
+            is_jump = True
+    else:
+        if jump_count >= -7:
+            if jump_count > 0:
+                player_y -= (jump_count ** 2) / 2
+            else:
+                player_y += (jump_count ** 2) / 2
+            jump_count -= 1
+        else:
+            is_jump = False
+            jump_count = 7
 
     if player_anim_count == 3:
         player_anim_count = 0
